@@ -6,12 +6,14 @@ use Tests\TestCase;
 use Illuminate\Support\Str;
 use PHPUnit\Framework\Attributes\Test;
 use OptimaCultura\Company\Domain\Company;
+use OptimaCultura\Company\Domain\ValueObject\CompanyStatus;
 use OptimaCultura\Company\Application\CompanyCreator;
 use Tests\OptimaCultura\Company\Infrastructure\CompanyRepositoryFake;
 
 final class CreateANewCompanyTest extends TestCase
 {
     /**
+     * Compruebo que se puede crear una nueva compañia correctamente.
      * @group application
      * @group company
      * @test
@@ -26,7 +28,9 @@ final class CreateANewCompanyTest extends TestCase
         $testCompany = [
             'id'     => Str::uuid(),
             'name'   => $faker->name,
-            'status' => 'inactive',
+            'email'  => $faker->email,
+            'address'=> $faker->address,
+            'status' => "inactive",
         ];
 
         /**
@@ -35,7 +39,10 @@ final class CreateANewCompanyTest extends TestCase
         $creator = new CompanyCreator(new CompanyRepositoryFake());
         $company = $creator->handle(
             $testCompany['id'],
-            $testCompany['name']
+            $testCompany['name'],
+            $testCompany['email'],
+            $testCompany['address'],
+            $testCompany['status'],
         );
 
         /**

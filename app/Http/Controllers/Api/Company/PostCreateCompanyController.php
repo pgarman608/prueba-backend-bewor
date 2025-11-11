@@ -11,13 +11,14 @@ use OptimaCultura\Company\Application\CompanyCreator;
 class PostCreateCompanyController extends Controller
 {
     /**
-     * Create new company
+     * Crear una compañia
+     * @return \Illuminate\Http\Response
      */
     public function __invoke(CreateCompanyRequest $request, CompanyCreator $service)
     {
         DB::beginTransaction();
         try {
-            $company = $service->handle(Str::uuid(), $request->name);
+            $company = $service->handle(Str::uuid(), $request->name, $request->email,$request->address ,$request->status);
             DB::commit();
             return response($company, 201);
         } catch (\Throwable $error) {

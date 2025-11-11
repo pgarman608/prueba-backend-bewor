@@ -5,20 +5,20 @@ namespace Tests\OptimaCultura\Company\Routes;
 use Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
-class CreateNewCompanyRouteTest extends TestCase
+class AllCompaniesRouteTest extends TestCase
 {
     /**
-     * Compruebo que se puede crear una nueva compañia a través de la ruta correspondiente.
      * @group route
      * @group access-interface
      * @test
      */
     #[Test]
-    public function postCreateNewCompanyRoute()
+    public function allCompaniesRoute()
     {
         /**
          * Preparing
          */
+        
         $faker = \Faker\Factory::create();
         $testCompany = [
             'name'   => $faker->name,
@@ -30,18 +30,17 @@ class CreateNewCompanyRouteTest extends TestCase
         /**
          * Actions
          */
-        $response = $this->json('POST', '/api/company', [
-            'name' => $testCompany['name'],
-            'email' => $testCompany['email'],
-            'address' => $testCompany['address'],
-            'status' => $testCompany['status'],
-        ]);
+
+        $this->json('post', '/api/company', $testCompany)->assertStatus(201);;
+        $response = $this->json('GET', '/api/companies');
 
         /**
          * Asserts
          */
+
         $response->assertStatus(201)
-            ->assertJsonFragment($testCompany);
+            ->assertJsonFragment(['name' => $testCompany['name']])
+            ->assertJsonStructure([['id', 'name', 'email', 'address', 'status']]);
     }
 }
 
